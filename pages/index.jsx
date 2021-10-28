@@ -25,35 +25,44 @@ const Home = () => {
   const [slider, setSlider] = useState(0);
   const [views, setViews] = useState("");
   const [prize, setPrize] = useState(0.0);
+  const [disc, setDisc] = useState(false);
 
   useEffect(() => {
     if (slider < 1000) {
       setViews(slider);
-      setPrize(`$${Number((slider / 1000000) * 36).toFixed(2)}`);
     } else if (slider >= 1000 && slider < 1000000) {
       setViews(`
         ${Math.ceil(slider / 1000)}k
       `);
-      setPrize(`$${Number((slider / 1000000) * 36).toFixed(2)}`);
     } else if (slider >= 1000000) {
       setViews(`
         ${slider / 1000000}m
       `);
-      setPrize(`$${(slider / 1000000) * 36}`);
     }
-  }, [slider]);
+
+    setPrize(
+      `$${
+        disc
+          ? Number(
+              (slider / 1000000) * 36 - (slider / 1000000) * 36 * (25 / 100)
+            ).toFixed(2)
+          : Number((slider / 1000000) * 36).toFixed(2)
+      }`
+    );
+  }, [disc, slider]);
 
   return (
     <Center
       backgroundImage="url('images/bg-pattern.svg')"
       backgroundRepeat="no-repeat"
       backgroundPosition="top left"
+      backgroundSize={{ xl: "contain" }}
       padding="8"
       width="100vw"
       height="100vh"
       backgroundColor="white"
     >
-      <Center top="16" position="absolute">
+      <Center top="5vh" position="absolute">
         <svg xmlns="http://www.w3.org/2000/svg" width="146" height="145">
           <g fill="none" fillRule="evenodd" stroke="#CFD8EF">
             <circle cx="63" cy="82" r="62.5" />
@@ -62,14 +71,18 @@ const Home = () => {
         </svg>
       </Center>
       <Box zIndex="30">
-        <Text textAlign="center" fontSize="xl" fontWeight="extrabold">
+        <Text
+          textAlign="center"
+          fontSize={{ base: "xl", lg: "xx-large" }}
+          fontWeight="extrabold"
+        >
           Simple, traffic-based pricing
         </Text>
         <Text
           marginTop="4"
           textAlign="center"
           color="hsl(225, 20%, 60%)"
-          fontSize="xs"
+          fontSize={{ base: "xs", lg: "sm" }}
         >
           Sign-up for our 30-day trial.
           <br /> No credit card required.
@@ -79,18 +92,43 @@ const Home = () => {
           backgroundColor="white"
           boxShadow="xl"
           borderRadius="lg"
-          width="100%"
+          width={{ base: "100%", md: "container.md", lg: "container.lg" }}
         >
           <Box padding="5">
-            <Text
-              marginTop="4"
-              textTransform="uppercase"
-              textAlign="center"
-              color="hsl(225, 20%, 60%)"
-              fontSize="xs"
+            <Box
+              display="flex"
+              alignItems="center"
+              justifyContent={{ base: "center", lg: "space-between" }}
             >
-              {views} Pageviews
-            </Text>
+              <Text
+                marginTop="4"
+                textTransform="uppercase"
+                textAlign="center"
+                fontWeight="black"
+                color="hsl(225, 20%, 60%)"
+                fontSize={{ base: "xs", lg: "lg" }}
+              >
+                {views} Pageviews
+              </Text>
+              <Box
+                display={{ base: "none", lg: "flex" }}
+                marginTop="8"
+                justifyContent="center"
+              >
+                <Text fontSize="xxx-large" fontWeight="black">
+                  {prize}
+                </Text>
+                <Text
+                  fontSize="lg"
+                  marginLeft="2"
+                  marginTop="5"
+                  color="hsl(225, 20%, 60%)"
+                >
+                  /month
+                </Text>
+              </Box>
+            </Box>
+
             <Slider
               max={1000000}
               min={0}
@@ -116,7 +154,11 @@ const Home = () => {
                 </svg>
               </SliderThumb>
             </Slider>
-            <Box marginTop="8" display="flex" justifyContent="center">
+            <Box
+              display={{ base: "flex", lg: "none" }}
+              marginTop="8"
+              justifyContent="center"
+            >
               <Text fontSize="xx-large" fontWeight="black">
                 {prize}
               </Text>
@@ -139,24 +181,38 @@ const Home = () => {
               <Text fontSize="x-small" color="hsl(225, 20%, 60%)">
                 Monthly Billing
               </Text>
-              <Switch color="hsl(174, 86%, 45%)" />
+              <Switch onChange={() => setDisc(!disc)} colorScheme="cyan" />
               <Text fontSize="x-small" color="hsl(225, 20%, 60%)">
                 Yearly Billing
               </Text>
             </Box>
           </Box>
           <Divider marginY="2" />
-          <Box padding="5" display="flex" flexDirection="column">
+          <Box
+            padding="5"
+            display="flex"
+            justifyContent="space-between"
+            flexDirection={{ base: "column", lg: "row" }}
+          >
             <List color="hsl(225, 20%, 60%)" spacing={3}>
-              <ListItem textAlign="center" fontSize="xs">
+              <ListItem
+                textAlign={{ base: "center", lg: "left" }}
+                fontSize="xs"
+              >
                 <ListIcon as={CheckIcon} />
                 Unlimited websites
               </ListItem>
-              <ListItem textAlign="center" fontSize="xs">
+              <ListItem
+                textAlign={{ base: "center", lg: "left" }}
+                fontSize="xs"
+              >
                 <ListIcon as={CheckIcon} />
                 100% data ownership
               </ListItem>
-              <ListItem textAlign="center" fontSize="xs">
+              <ListItem
+                textAlign={{ base: "center", lg: "left" }}
+                fontSize="xs"
+              >
                 <ListIcon as={CheckIcon} />
                 Email reports
               </ListItem>
@@ -169,6 +225,7 @@ const Home = () => {
               bgColor="hsl(227, 35%, 25%)"
               borderRadius="3xl"
               fontSize="sm"
+              paddingX={{ lg: "10" }}
             >
               Start my trial
             </Button>

@@ -30,6 +30,9 @@ const theme = extendTheme({
       xl: "1280px",
     },
   },
+  colors: {
+    itsCyan: "hsl(174, 86%, 45%)",
+  },
 });
 
 export default theme;
