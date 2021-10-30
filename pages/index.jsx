@@ -1,5 +1,6 @@
 import Head from "next/head";
 import Image from "next/image";
+import { useRouter } from "next/router";
 
 import CheckIcon from "../public/images/icon-check.svg";
 import { useState, useEffect } from "react";
@@ -19,6 +20,14 @@ import {
   ListIcon,
   Button,
   Divider,
+  Badge,
+  Modal,
+  ModalOverlay,
+  ModalContent,
+  ModalHeader,
+  ModalFooter,
+  ModalBody,
+  ModalCloseButton,
 } from "@chakra-ui/react";
 
 const Home = () => {
@@ -26,6 +35,9 @@ const Home = () => {
   const [views, setViews] = useState("");
   const [prize, setPrize] = useState(0.0);
   const [disc, setDisc] = useState(false);
+  const [modals, setModals] = useState(false);
+
+  const router = useRouter();
 
   useEffect(() => {
     if (slider < 1000) {
@@ -62,6 +74,27 @@ const Home = () => {
       height="100vh"
       backgroundColor="white"
     >
+      <Head>
+        <title>Interactive Pricing Component</title>
+        <link
+          rel="apple-touch-icon"
+          sizes="180x180"
+          href="favicon/apple-touch-icon.png"
+        />
+        <link
+          rel="icon"
+          type="image/png"
+          sizes="32x32"
+          href="favicon/favicon-32x32.png"
+        />
+        <link
+          rel="icon"
+          type="image/png"
+          sizes="16x16"
+          href="favicon/favicon-16x16.png"
+        />
+        <link rel="manifest" href="favicon/site.webmanifest" />
+      </Head>
       <Center top="5vh" position="absolute">
         <svg xmlns="http://www.w3.org/2000/svg" width="146" height="145">
           <g fill="none" fillRule="evenodd" stroke="#CFD8EF">
@@ -184,6 +217,25 @@ const Home = () => {
               <Switch onChange={() => setDisc(!disc)} colorScheme="cyan" />
               <Text fontSize="x-small" color="hsl(225, 20%, 60%)">
                 Yearly Billing
+                <Badge
+                  position="absolute"
+                  marginLeft="2"
+                  borderRadius="3xl"
+                  fontSize="x-small"
+                  colorScheme="orange"
+                  display={{ base: "none", lg: "unset" }}
+                >
+                  25% Discount
+                </Badge>
+                <Badge
+                  marginLeft="2"
+                  borderRadius="3xl"
+                  fontSize="x-small"
+                  colorScheme="orange"
+                  display={{ lg: "none" }}
+                >
+                  -25%
+                </Badge>
               </Text>
             </Box>
           </Box>
@@ -226,12 +278,49 @@ const Home = () => {
               borderRadius="3xl"
               fontSize="sm"
               paddingX={{ lg: "10" }}
+              onClick={() => setModals(true)}
             >
               Start my trial
             </Button>
           </Box>
         </Container>
       </Box>
+      <Modal isOpen={modals} onClose={() => setModals(false)}>
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader>Modal Title</ModalHeader>
+          <ModalCloseButton />
+          <ModalBody>
+            Your Billing is:
+            <Box marginTop="8" display="flex" justifyContent="center">
+              <Text fontSize="xx-large" fontWeight="black">
+                {prize}
+              </Text>
+              <Text
+                fontSize="md"
+                marginLeft="2"
+                marginTop="3"
+                color="hsl(225, 20%, 60%)"
+              >
+                /month
+              </Text>
+            </Box>
+          </ModalBody>
+
+          <ModalFooter>
+            <Button
+              colorScheme="cyan"
+              mr={3}
+              onClick={() => router.reload(window.location.pathname)}
+            >
+              Okay
+            </Button>
+            <Button variant="ghost" onClick={() => setModals(false)}>
+              Cancel
+            </Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
     </Center>
   );
 };
