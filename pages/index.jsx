@@ -288,10 +288,9 @@ const Home = () => {
       <Modal isOpen={modals} onClose={() => setModals(false)}>
         <ModalOverlay />
         <ModalContent>
-          <ModalHeader>Modal Title</ModalHeader>
+          <ModalHeader>Your Billing is:</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
-            Your Billing is:
             <Box marginTop="8" display="flex" justifyContent="center">
               <Text fontSize="xx-large" fontWeight="black">
                 {prize}
